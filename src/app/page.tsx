@@ -1,69 +1,72 @@
-import Image from "next/image";
+import Link from "next/link";
+import { whatsappLink, generalEnquiryMessage } from "@/lib/whatsapp";
+import { designs, designStyles } from "@/data/designs";
+import { FeaturedDesigns } from "@/components/home/FeaturedDesigns";
+import { WhyChooseUs } from "@/components/home/WhyChooseUs";
+import { HowItWorks } from "@/components/home/HowItWorks";
+import { PricingPreview } from "@/components/home/PricingPreview";
+import { Testimonials } from "@/components/home/Testimonials";
+import { FinalCTA } from "@/components/home/FinalCTA";
 
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+// Show the 5 wedding sub-styles that actually exist as tiles inside the
+// Invitation Videos card, each linking to the wedding page.
+const videoStyleTiles = designStyles
+  .map((s) => {
+    const first = designs.find((d) => d.category === "invitation-videos" && d.style === s.slug);
+    return first ? { title: s.title, youtubeId: first.youtubeId } : null;
+  })
+  .filter((x): x is { title: string; youtubeId: string } => Boolean(x))
+  .slice(0, 5);
+
+const benefits = [["◇", "High Quality & Creative Designs"], ["⚙", "Quick Delivery"], ["⟳", "Easy Customization"], ["₹", "Affordable Pricing"], ["♧", "Dedicated Support"], ["♡", "Make Every Moment Special"]];
+
+export default function HomePage() {
+  return <div className="reference-home">
+    <section className="reference-hero">
+      <div className="hero-copy">
+        <p className="hero-kicker">TRADITION&nbsp;&nbsp; | &nbsp;&nbsp;TECHNOLOGY&nbsp;&nbsp; | &nbsp;&nbsp;TIMELESS MEMORIES</p>
+        <h1>Beautiful Invitations<br />for Life&apos;s Special Moments</h1>
+        <p className="hero-subtitle">Video Invitations&nbsp;&nbsp; | &nbsp;&nbsp;Invitation Websites&nbsp;&nbsp; | &nbsp;&nbsp;RIP Tribute Videos</p>
+        <div className="hero-services">
+          <div><span className="line-icon">▣</span><strong>Premium<br />Video Invitations</strong></div>
+          <div><span className="line-icon">▤</span><strong>Modern<br />Invitation Websites</strong></div>
+          <div><span className="line-icon">♡</span><strong>Heartfelt<br />RIP Tribute Videos</strong></div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="hero-actions">
+          <a className="wa-main" href={whatsappLink(generalEnquiryMessage())} target="_blank" rel="noopener noreferrer"><span>◉</span> Chat on WhatsApp <b>›</b></a>
+          <span className="script-note">Let&apos;s Create<br />Your Special Invitation</span>
         </div>
-      </main>
+      </div>
+    </section>
+    <section className="category-section">
+      <div className="ornament-title"><span /> <b>Our Categories</b> <span /></div>
+      <div className="category-grid">
+        <CategoryCard tone="rose" icon="▣" title="Invitation Videos" description="Beautifully crafted video invitations for every special occasion" href="/invitation-videos" variant="tiles" />
+        <CategoryCard tone="mint" icon="▤" title="Invitation Websites" description="Elegant and personalized invitation websites for your special occasions" href="/invitation-websites" variant="soon" />
+        <CategoryCard tone="blue" icon="❧" title="RIP Tribute Videos" description="A respectful way to remember and celebrate their life" href="/person-return-videos" variant="tribute" />
+      </div>
+    </section>
+    <section className="benefits-strip">{benefits.map(([icon, label]) => <div key={label}><b>{icon}</b><span>{label}</span></div>)}</section>
+    <div className="home-story">
+      <FeaturedDesigns />
+      <WhyChooseUs />
+      <HowItWorks />
+      <PricingPreview />
+      <Testimonials />
+      <FinalCTA />
     </div>
-  );
+  </div>;
+}
+
+type CardVariant = "tiles" | "soon" | "tribute";
+function CategoryCard({ tone, icon, title, description, href, variant }: { tone: string; icon: string; title: string; description: string; href: string; variant: CardVariant }) {
+  return <article className={`category-card ${tone}`}>
+    <div className="category-head"><span className="category-icon">{icon}</span><div><h2>{title}</h2><p>{description}</p></div></div>
+    {variant === "tiles" && <div className="occasion-row">
+      {videoStyleTiles.map(({ title: styleTitle, youtubeId }) => <Link href="/invitation-videos/wedding" key={styleTitle} className="occasion-mini"><img src={`https://i.ytimg.com/vi/${youtubeId}/mqdefault.jpg`} alt="" /><span>{styleTitle}</span></Link>)}
+      <Link href={href} className="view-all"><b>›</b><span>View All</span></Link>
+    </div>}
+    {variant === "soon" && <div className="tribute-row"><img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=700&q=80" alt="Elegant invitation website preview" /><Link href={href} className="view-all"><b>›</b><span>Coming Soon · Enquire</span></Link></div>}
+    {variant === "tribute" && <div className="tribute-row"><img src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=700&q=80" alt="Memorial candle at sunset" /><Link href={href} className="view-all"><b>›</b><span>View Details</span></Link></div>}
+  </article>;
 }

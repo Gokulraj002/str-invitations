@@ -1,60 +1,41 @@
+import Link from "next/link";
 import { PageHero } from "@/components/ui/PageHero";
-import { OccasionGrid } from "@/components/ui/OccasionGrid";
-import { DesignCard } from "@/components/ui/DesignCard";
-import { EmptyState } from "@/components/ui/EmptyState";
-import { StyleFilter } from "@/components/ui/StyleFilter";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { getByCategory } from "@/data/designs";
-import { occasions } from "@/data/site";
+import { PriceTag } from "@/components/ui/PriceTag";
+import { VideoTypeSection } from "@/components/ui/VideoTypeSection";
 import { FinalCTA } from "@/components/home/FinalCTA";
+import { getByType } from "@/data/designs";
+import { videoTypes, type VideoType } from "@/data/pricing";
 
 export const metadata = {
   title: "Invitation Videos",
-  description: "Cinematic invitation videos for weddings, engagements, house warmings and more.",
+  description: "Wedding invitation videos and 3D save-the-date shorts by STR Invitations.",
 };
 
-export default function InvitationVideosPage() {
-  const designs = getByCategory("invitation-videos");
-  const filledOccasions = occasions.filter((o) =>
-    designs.some((d) => d.occasion === o.slug)
-  );
-  const showOccasionGrid = filledOccasions.length > 1;
-  const distinctStyles = new Set(designs.map((d) => d.style).filter(Boolean));
-  const hasStyles = distinctStyles.size > 1;
+const TYPES: VideoType[] = ["long", "3d-short"];
 
+export default function InvitationVideosPage() {
   return (
     <>
       <PageHero
-        eyebrow="Video Invitations"
+        eyebrow="Invitation Videos"
         title="Cinematic invitation videos"
         accentWord="Cinematic"
-        subtitle="Beautifully animated HD video invitations — perfect for WhatsApp, Instagram and family groups."
+        subtitle="Choose a video type below — every design is fully customised with your names, dates and venue, delivered in HD for WhatsApp."
       />
 
-      {showOccasionGrid && (
-        <section className="container-x py-16">
-          <SectionHeading eyebrow="Browse by Occasion" title="Pick your celebration" />
-          <OccasionGrid categorySlug="invitation-videos" />
-        </section>
-      )}
+      <nav className="type-jump container-x" aria-label="Video types">
+        {TYPES.map((type) => (
+          <Link key={type} href={`#${type}`} className="type-jump-card">
+            <span className="type-jump-title">{videoTypes[type].title}</span>
+            <span className="type-jump-sub">{getByType(type).length} designs</span>
+            <PriceTag price={videoTypes[type].price} size="sm" />
+          </Link>
+        ))}
+      </nav>
 
-      <section className="container-x py-16">
-        <SectionHeading
-          eyebrow="All Designs"
-          title={showOccasionGrid ? "The full collection" : "Wedding invitation collection"}
-        />
-        {designs.length === 0 ? (
-          <EmptyState />
-        ) : hasStyles ? (
-          <StyleFilter designs={designs} />
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {designs.map((d) => (
-              <DesignCard key={d.id} design={d} />
-            ))}
-          </div>
-        )}
-      </section>
+      {TYPES.map((type) => (
+        <VideoTypeSection key={type} type={type} designs={getByType(type)} />
+      ))}
 
       <FinalCTA />
     </>

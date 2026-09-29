@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import { PageHero } from "@/components/ui/PageHero";
-import { DesignCard } from "@/components/ui/DesignCard";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { WebsiteCard } from "@/components/ui/WebsiteCard";
 import { FinalCTA } from "@/components/home/FinalCTA";
-import { getByOccasion } from "@/data/designs";
-import { occasions, type OccasionSlug } from "@/data/site";
+import { websites } from "@/data/websites";
+import { occasions } from "@/data/site";
 
 export const dynamicParams = false;
 
@@ -16,10 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ occasion:
   const { occasion } = await params;
   const o = occasions.find((x) => x.slug === occasion);
   if (!o) return {};
-  return {
-    title: `${o.title} Invitation Websites`,
-    description: `${o.title} invitation website designs by STR Invitations.`,
-  };
+  return { title: `${o.title} Invitation Websites`, description: `${o.title} invitation website demos by STR Invitations.` };
 }
 
 export default async function OccasionWebsitePage({ params }: { params: Promise<{ occasion: string }> }) {
@@ -27,7 +24,7 @@ export default async function OccasionWebsitePage({ params }: { params: Promise<
   const o = occasions.find((x) => x.slug === occasion);
   if (!o) notFound();
 
-  const designs = getByOccasion("invitation-websites", o.slug as OccasionSlug);
+  const list = websites.filter((s) => s.occasion === o.slug);
 
   return (
     <>
@@ -35,16 +32,14 @@ export default async function OccasionWebsitePage({ params }: { params: Promise<
         eyebrow="Invitation Websites"
         title={`${o.title} Invitation Websites`}
         accentWord={o.title}
-        subtitle={`Elegant, mobile-first ${o.title.toLowerCase()} invitation websites — RSVP, gallery, map and more.`}
+        subtitle={`Elegant, mobile-first ${o.title.toLowerCase()} invitation websites — tap any design to preview it live.`}
       />
       <section className="container-x py-16">
-        {designs.length === 0 ? (
+        {list.length === 0 ? (
           <EmptyState />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {designs.map((d) => (
-              <DesignCard key={d.id} design={d} />
-            ))}
+            {list.map((s) => <WebsiteCard key={s.id} site={s} />)}
           </div>
         )}
       </section>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PageHero } from "@/components/ui/PageHero";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { generalEnquiryMessage } from "@/lib/whatsapp";
 import { site } from "@/data/site";
 
@@ -13,7 +14,7 @@ export const metadata = {
 const channels = [
   {
     tone: "green",
-    icon: "◉",
+    icon: <WhatsAppIcon size={34} />,
     label: "WhatsApp",
     value: site.phoneDisplay,
     subtitle: "Fastest — usually replies within minutes",

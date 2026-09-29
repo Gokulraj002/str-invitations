@@ -1,22 +1,21 @@
 #!/usr/bin/env node
-/**
- * Sync the full YouTube back-catalog into src/data/designs.ts
- *
- * Requirements:
- *   1. Get a YouTube Data API v3 key (free): https://console.cloud.google.com/
- *      → Create project → Enable "YouTube Data API v3" → Create API Key
- *   2. export YOUTUBE_API_KEY=your_key_here
- *   3. Run: node scripts/sync-youtube.mjs
- *
- * The script pulls every video, guesses a category/occasion from the title,
- * and writes a fresh designs.ts. Review it before committing.
- */
+// Sync videos from the STR Invitations YouTube channel.
+// Usage: npm run sync:yt   (needs YOUTUBE_API_KEY in .env.local)
+// Writes src/data/designs.generated.ts — review it, then copy the entries you
+// want into src/data/designs.ts. Existing titles/tags in designs.ts are kept.
+//
+// How videos are classified:
+//   • in the "RIP PERSON RETURN VIDEO" playlist → rip
+//   • title contains "3D"                       → 3d-short
+//   • everything else                           → long
+//   • gaming / non-invitation videos are skipped
 
-// Auto-load .env.local so `npm run sync:yt` works without exporting env vars
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-const envPath = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", ".env.local");
+
+const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+const envPath = path.join(root, ".env.local");
 if (fs.existsSync(envPath)) {
   for (const line of fs.readFileSync(envPath, "utf8").split("\n")) {
     const m = line.match(/^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.+?)\s*$/);
@@ -24,116 +23,78 @@ if (fs.existsSync(envPath)) {
   }
 }
 
-const CHANNEL_ID = "UCq2YI9-skURaFfn_xraPiTQ"; // STR Invitations
+const CHANNEL_ID = "UCq2YI9-skURaFfn_xraPiTQ";
 const API_KEY = process.env.YOUTUBE_API_KEY;
-
+const SKIP = /gaming|free fire|stream|marvel|intro like|pirates/i;
 if (!API_KEY) {
-  console.error("❌ Set YOUTUBE_API_KEY env var first.");
+  console.error("❌ Add YOUTUBE_API_KEY=... to .env.local first.");
   process.exit(1);
 }
 
-async function fetchAllVideos() {
-  // Step 1: get the "uploads" playlist ID
-  const channelRes = await fetch(
-    `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${CHANNEL_ID}&key=${API_KEY}`
-  );
-  const channelData = await channelRes.json();
-  const uploadsId = channelData.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
-  if (!uploadsId) throw new Error("Could not resolve uploads playlist");
-
-  // Step 2: paginate through all playlist items
-  const videos = [];
-  let pageToken = "";
-  do {
-    const url = new URL("https://www.googleapis.com/youtube/v3/playlistItems");
-    url.searchParams.set("part", "snippet,contentDetails");
-    url.searchParams.set("maxResults", "50");
-    url.searchParams.set("playlistId", uploadsId);
-    url.searchParams.set("key", API_KEY);
-    if (pageToken) url.searchParams.set("pageToken", pageToken);
-    const res = await fetch(url);
-    const data = await res.json();
-    for (const item of data.items || []) {
-      videos.push({
-        id: item.contentDetails.videoId,
-        title: item.snippet.title,
-        publishedAt: item.contentDetails.videoPublishedAt || item.snippet.publishedAt,
-        description: item.snippet.description,
-      });
-    }
-    pageToken = data.nextPageToken || "";
-  } while (pageToken);
-
-  return videos;
-}
-
-function guessCategory(title) {
-  const t = title.toLowerCase();
-  if (t.includes("website")) return { category: "invitation-websites" };
-  if (t.includes("return") || t.includes("thank you")) return { category: "person-return-videos" };
-  return { category: "invitation-videos" };
-}
-
-function guessOccasion(title) {
-  const t = title.toLowerCase();
-  if (t.includes("wedding") || t.includes("save the date") || t.includes("hindu") || t.includes("telugu")) return "wedding";
-  if (t.includes("engagement")) return "engagement";
-  if (t.includes("house") || t.includes("griha")) return "house-warming";
-  if (t.includes("dhothi") || t.includes("dhoti")) return "dhothi-ceremony";
-  if (t.includes("naming") || t.includes("cradle") || t.includes("baby")) return "naming-ceremony";
-  return "other-ceremonies";
-}
-
-function toEntry(v, idx) {
-  const cat = guessCategory(v.title);
-  const isVideo = cat.category === "invitation-videos";
-  const prefix = { "invitation-videos": "STR-IV", "invitation-websites": "STR-WEB", "person-return-videos": "STR-RTN" }[cat.category];
-  return {
-    id: `${prefix}-${String(idx + 1).padStart(3, "0")}`,
-    title: v.title.replace(/\s*\|.*$/, "").trim(),
-    category: cat.category,
-    occasion: isVideo ? guessOccasion(v.title) : undefined,
-    youtubeId: v.id,
-    price: 1299,
-    tags: [],
-  };
-}
-
-async function main() {
-  console.log("🔄 Fetching videos from YouTube…");
-  const videos = await fetchAllVideos();
-  console.log(`✅ Fetched ${videos.length} videos.`);
-
-  const entries = videos.map(toEntry);
-  const body = `import type { CategorySlug, OccasionSlug } from "./site";
-
-export type Design = {
-  id: string;
-  title: string;
-  category: CategorySlug;
-  occasion?: OccasionSlug;
-  youtubeId: string;
-  duration?: string;
-  price?: number;
-  tags?: string[];
-  description?: string;
-  features?: string[];
+const api = async (endpoint, params) => {
+  const url = new URL(`https://www.googleapis.com/youtube/v3/${endpoint}`);
+  Object.entries({ ...params, key: API_KEY }).forEach(([k, v]) => url.searchParams.set(k, v));
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${endpoint}: ${res.status} ${await res.text()}`);
+  return res.json();
 };
 
-// Auto-generated by scripts/sync-youtube.mjs — review before committing.
-export const designs: Design[] = ${JSON.stringify(entries, null, 2)};
-
-export const getByCategory = (category: CategorySlug) => designs.filter((d) => d.category === category);
-export const getByOccasion = (category: CategorySlug, occasion: OccasionSlug) =>
-  designs.filter((d) => d.category === category && d.occasion === occasion);
-export const getById = (id: string) => designs.find((d) => d.id === id);
-export const featuredDesigns = () => designs.slice(0, 6);
-`;
-  const fs = await import("node:fs");
-  const path = new URL("../src/data/designs.generated.ts", import.meta.url);
-  fs.writeFileSync(path, body);
-  console.log(`📝 Wrote ${entries.length} designs to src/data/designs.generated.ts`);
-  console.log("   Review the file, then rename it to designs.ts to activate.");
+async function playlistVideoIds(playlistId) {
+  const ids = [];
+  let pageToken = "";
+  do {
+    const d = await api("playlistItems", { part: "contentDetails", maxResults: 50, playlistId, ...(pageToken && { pageToken }) });
+    ids.push(...d.items.map((i) => i.contentDetails.videoId));
+    pageToken = d.nextPageToken ?? "";
+  } while (pageToken);
+  return ids;
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+const seconds = (iso) => {
+  const [, h = 0, m = 0, s = 0] = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/) ?? [];
+  return +h * 3600 + +m * 60 + +s;
+};
+
+async function main() {
+  const channel = await api("channels", { part: "contentDetails", id: CHANNEL_ID });
+  const uploads = await playlistVideoIds(channel.items[0].contentDetails.relatedPlaylists.uploads);
+
+  const playlists = (await api("playlists", { part: "snippet", channelId: CHANNEL_ID, maxResults: 50 })).items;
+  const ripPlaylist = playlists.find((p) => /rip|person return/i.test(p.snippet.title));
+  const ripIds = new Set(ripPlaylist ? await playlistVideoIds(ripPlaylist.id) : []);
+
+  const videos = [];
+  for (let i = 0; i < uploads.length; i += 50) {
+    const d = await api("videos", { part: "snippet,contentDetails", id: uploads.slice(i, i + 50).join(",") });
+    videos.push(...d.items);
+  }
+
+  const existing = fs.readFileSync(path.join(root, "src/data/designs.ts"), "utf8");
+  const entries = videos
+    .filter((v) => !SKIP.test(v.snippet.title) && seconds(v.contentDetails.duration) > 0)
+    .map((v, i) => {
+      const s = seconds(v.contentDetails.duration);
+      const videoType = ripIds.has(v.id) ? "rip" : /3d/i.test(v.snippet.title) ? "3d-short" : "long";
+      return {
+        id: `STR-NEW-${String(i + 1).padStart(3, "0")}`,
+        title: v.snippet.title.split("|")[0].replace(/[💍#].*$/u, "").trim(),
+        category: videoType === "rip" ? "person-return-videos" : "invitation-videos",
+        ...(videoType !== "rip" && { occasion: "wedding" }),
+        videoType,
+        youtubeId: v.id,
+        duration: `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`,
+        tags: [],
+        alreadyOnWebsite: existing.includes(`"${v.id}"`),
+      };
+    });
+
+  const fresh = entries.filter((e) => !e.alreadyOnWebsite).map(({ alreadyOnWebsite, ...e }) => e);
+  const out = `// Generated ${new Date().toISOString()} — ${fresh.length} NEW video(s) not yet on the website.\n// Copy the entries you want into the designs array in src/data/designs.ts.\nexport const newDesigns = ${JSON.stringify(fresh, null, 2)};\n`;
+  fs.writeFileSync(path.join(root, "src/data/designs.generated.ts"), out);
+  console.log(`✅ ${videos.length} videos on channel · ${fresh.length} new → src/data/designs.generated.ts`);
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

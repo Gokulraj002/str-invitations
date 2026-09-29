@@ -17,26 +17,14 @@ export const mainCategories = [
   {
     slug: "invitation-videos",
     title: "Invitation Videos",
-    short: "Cinematic video invitations",
-    description:
-      "Cinematic, animated invitation videos delivered as HD MP4 — perfect for WhatsApp, Instagram and family groups.",
-    icon: "🎬",
   },
   {
     slug: "invitation-websites",
     title: "Invitation Websites",
-    short: "Interactive digital invites",
-    description:
-      "Beautiful mobile-first invitation websites with event details, map, RSVP, gallery and countdown timer.",
-    icon: "💻",
   },
   {
     slug: "person-return-videos",
     title: "RIP Tribute Videos",
-    short: "Heartfelt memorial tributes",
-    description:
-      "A respectful way to remember and celebrate the life of a loved one — cinematic memorial tribute videos with photos, memories and prayer.",
-    icon: "❧",
   },
 ] as const;
 

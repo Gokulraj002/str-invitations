@@ -1,53 +1,57 @@
 import { PageHero } from "@/components/ui/PageHero";
-import { OccasionGrid } from "@/components/ui/OccasionGrid";
-import { DesignCard } from "@/components/ui/DesignCard";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { getByCategory } from "@/data/designs";
+import { PriceTag } from "@/components/ui/PriceTag";
+import { WebsiteCard } from "@/components/ui/WebsiteCard";
+import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { FinalCTA } from "@/components/home/FinalCTA";
+import { websites } from "@/data/websites";
+import { startingPrices } from "@/data/pricing";
 
 export const metadata = {
   title: "Invitation Websites",
   description: "Interactive digital invitation websites with RSVP, gallery, map and countdown.",
 };
 
-export default function InvitationWebsitesPage() {
-  const designs = getByCategory("invitation-websites");
-  const hasDesigns = designs.length > 0;
+const features = ["RSVP form", "Live countdown", "Venue map & directions", "Photo gallery", "Event schedule", "Your own shareable link"];
 
+export default function InvitationWebsitesPage() {
   return (
     <>
       <PageHero
-        eyebrow="Digital Invitation Websites"
+        eyebrow="Invitation Websites"
         title="Interactive digital invitations"
         accentWord="Interactive"
-        subtitle="Beautifully crafted, mobile-first invitation websites with RSVP, event schedule, venue map, gallery and live countdown."
+        subtitle="Mobile-first invitation websites your guests open with one tap — tap any design below to preview the live website."
       />
 
-      {hasDesigns ? (
-        <>
-          <section className="container-x py-16">
-            <SectionHeading eyebrow="Browse by Occasion" title="Pick your celebration" />
-            <OccasionGrid categorySlug="invitation-websites" />
-          </section>
+      <section className="type-section container-x">
+        <header className="type-section-head">
+          <div>
+            <p className="eyebrow">What every website includes</p>
+            <h2>Invitation Website Demos</h2>
+            <ul className="site-features">
+              {features.map((f) => <li key={f}>{f}</li>)}
+            </ul>
+          </div>
+          <div className="type-section-price">
+            <PriceTag price={startingPrices["invitation-websites"]} label="Starting from" size="lg" />
+            <WhatsAppButton size="md" message="Hi STR Invitations, I'd like an invitation website. Please share details.">
+              Enquire now
+            </WhatsAppButton>
+          </div>
+        </header>
 
-          <section className="container-x py-16">
-            <SectionHeading eyebrow="All Websites" title="The full collection" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {designs.map((d) => (
-                <DesignCard key={d.id} design={d} />
-              ))}
-            </div>
-          </section>
-        </>
-      ) : (
-        <section className="container-x py-16">
+        {websites.length === 0 ? (
           <EmptyState
-            title="Website samples launching soon"
-            subtitle="We're preparing a stunning collection of digital invitation websites — with RSVP, gallery, map and countdown features. Message us on WhatsApp to see private samples and reserve your slot."
+            title="Website demos launching soon"
+            subtitle="Message us on WhatsApp to see private demo links and reserve your slot."
           />
-        </section>
-      )}
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {websites.map((s) => <WebsiteCard key={s.id} site={s} />)}
+          </div>
+        )}
+      </section>
 
       <FinalCTA />
     </>

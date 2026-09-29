@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getById, designs as allDesigns } from "@/data/designs";
+import { getById, priceOf, designs as allDesigns } from "@/data/designs";
+import { videoTypes } from "@/data/pricing";
+import { PriceTag } from "@/components/ui/PriceTag";
 import { mainCategories, occasions } from "@/data/site";
 import { YouTubeEmbed } from "@/components/ui/YouTubeEmbed";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
@@ -18,13 +20,14 @@ export function DesignDetail({ designId }: Props) {
   const occ = design.occasion ? occasions.find((o) => o.slug === design.occasion) : null;
 
   const related = allDesigns
-    .filter((d) => d.id !== design.id && d.category === design.category)
+    .filter((d) => d.id !== design.id && d.videoType === design.videoType)
     .slice(0, 3);
 
+  const type = videoTypes[design.videoType];
   const message = designEnquiryMessage({
     designId: design.id,
     title: design.title,
-    categoryTitle: cat.title,
+    categoryTitle: type.title,
   });
 
   return (
@@ -52,11 +55,11 @@ export function DesignDetail({ designId }: Props) {
         </div>
 
         <aside className="lg:col-span-2">
-          <div className="text-xs uppercase tracking-[0.35em] text-gold mb-3">{cat.title}{occ ? ` · ${occ.title}` : ""}</div>
+          <div className="text-xs uppercase tracking-[0.35em] text-gold mb-3">{type.title}</div>
           <h1 className="font-display text-3xl md:text-4xl text-ivory leading-tight">
             {design.title}
           </h1>
-          <div className="mt-3 text-sm text-gold/80 font-mono">Design ID: {design.id}</div>
+          <div className="mt-3 text-sm text-gold/80">Design ID: {design.id}{design.duration ? ` · ${design.duration} min` : ""}</div>
 
           {design.description && (
             <p className="mt-6 text-ivory/70 leading-relaxed">{design.description}</p>
@@ -75,13 +78,10 @@ export function DesignDetail({ designId }: Props) {
             </div>
           )}
 
-          {design.price && (
-            <div className="mt-8 p-6 rounded-2xl gold-border">
-              <div className="text-[10px] uppercase tracking-widest text-ivory/50">Starting at</div>
-              <div className="font-display text-4xl gold-text">₹{design.price.toLocaleString("en-IN")}</div>
-              <div className="text-xs text-ivory/50 mt-1">Final quotation on WhatsApp based on customisation</div>
-            </div>
-          )}
+          <div className="detail-price mt-8">
+            <PriceTag price={priceOf(design)} label="Special offer price" size="lg" />
+            <p>Fully customised with your details · Final confirmation on WhatsApp</p>
+          </div>
 
           {design.features && (
             <div className="mt-8">
@@ -104,7 +104,7 @@ export function DesignDetail({ designId }: Props) {
             <a
               href={`https://youtube.com/watch?v=${design.youtubeId}`}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-full border border-gold/40 text-gold px-6 py-3.5 hover:bg-gold hover:text-obsidian transition-colors"
             >
               Watch on YouTube

@@ -1,10 +1,11 @@
 import { PageHero } from "@/components/ui/PageHero";
 import { PricingPreview } from "@/components/home/PricingPreview";
+import { VideoPriceList } from "@/components/ui/VideoPriceList";
 import { FinalCTA } from "@/components/home/FinalCTA";
 
 export const metadata = {
   title: "Pricing",
-  description: "Transparent starting prices for STR Invitations video invitations, invitation websites and return videos.",
+  description: "Special offer prices for invitation videos, 3D shorts, invitation websites and RIP tribute videos.",
 };
 
 export default function PricingPage() {
@@ -14,9 +15,10 @@ export default function PricingPage() {
         eyebrow="Packages & Pricing"
         title="Simple, transparent pricing"
         accentWord="transparent"
-        subtitle="Every package is fully customised. These are starting prices — the final quotation is shared on WhatsApp once we understand your exact requirements."
+        subtitle="Special offer prices on every package — the final quotation is shared on WhatsApp once we understand your requirements."
       />
       <PricingPreview />
+      <VideoPriceList />
       <FinalCTA />
     </>
   );

@@ -1,4 +1,5 @@
 import { whatsappLink } from "@/lib/whatsapp";
+import { WhatsAppIcon } from "./WhatsAppIcon";
 
 type Props = {
   message?: string;
@@ -26,12 +27,11 @@ export function WhatsAppButton({
     md: "px-5 py-2.5 text-sm",
     lg: "px-7 py-3.5 text-base",
   }[size];
+  const iconSize = { sm: 15, md: 18, lg: 21 }[size];
 
   return (
-    <a href={whatsappLink(message)} target="_blank" rel="noopener" className={`${base} ${variants} ${sizes} ${className}`}>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-        <path d="M20.5 3.5A11 11 0 0 0 3.7 17.3L2 22l4.9-1.6A11 11 0 1 0 20.5 3.5Zm-8.5 18a9 9 0 0 1-4.6-1.3l-.3-.2-2.9 1 .9-2.9-.2-.3A9 9 0 1 1 12 21.5Zm5.2-6.6c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.1s-.8.9-1 1.1c-.2.2-.4.2-.7.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2s0-.4.1-.6c.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5s-.7-1.7-.9-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.5 1 2.9 1.2 3.1c.1.2 2.1 3.2 5 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3Z" />
-      </svg>
+    <a href={whatsappLink(message)} target="_blank" rel="noopener noreferrer" className={`${base} ${variants} ${sizes} ${className}`}>
+      <WhatsAppIcon size={iconSize} />
       {children}
     </a>
   );

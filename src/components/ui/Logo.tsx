@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type Props = { size?: number; className?: string; withText?: boolean };
 
 export function Logo({ size = 44, className = "", withText = true }: Props) {
@@ -7,8 +9,7 @@ export function Logo({ size = 44, className = "", withText = true }: Props) {
         className="relative shrink-0 grid place-items-center overflow-hidden"
         style={{ width: size, height: size }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src="/logo-str.PNG"
           alt="STR Invitations"
           width={size - 6}

@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 import { PageHero } from "@/components/ui/PageHero";
-import { DesignCard } from "@/components/ui/DesignCard";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { StyleFilter } from "@/components/ui/StyleFilter";
+import { VideoTypeSection } from "@/components/ui/VideoTypeSection";
 import { FinalCTA } from "@/components/home/FinalCTA";
 import { getByOccasion } from "@/data/designs";
 import { occasions, type OccasionSlug } from "@/data/site";
+import type { VideoType } from "@/data/pricing";
 
 export const dynamicParams = false;
 
@@ -23,14 +23,14 @@ export async function generateMetadata({ params }: { params: Promise<{ occasion:
   };
 }
 
+const TYPES: VideoType[] = ["long", "3d-short"];
+
 export default async function OccasionPage({ params }: { params: Promise<{ occasion: string }> }) {
   const { occasion } = await params;
   const o = occasions.find((x) => x.slug === occasion);
   if (!o) notFound();
 
   const designs = getByOccasion("invitation-videos", o.slug as OccasionSlug);
-  const distinctStyles = new Set(designs.map((d) => d.style).filter(Boolean));
-  const hasMultipleStyles = distinctStyles.size > 1;
 
   return (
     <>
@@ -38,22 +38,18 @@ export default async function OccasionPage({ params }: { params: Promise<{ occas
         eyebrow="Invitation Videos"
         title={`${o.title} Video Invitations`}
         accentWord={o.title}
-        subtitle={`Browse our ${o.title.toLowerCase()} invitation video collection — every design fully customisable.`}
+        subtitle={`Browse our ${o.title.toLowerCase()} invitation videos by type — every design fully customisable.`}
       />
 
-      <section className="container-x py-16">
-        {designs.length === 0 ? (
+      {designs.length === 0 ? (
+        <section className="container-x py-16">
           <EmptyState />
-        ) : hasMultipleStyles ? (
-          <StyleFilter designs={designs} />
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {designs.map((d) => (
-              <DesignCard key={d.id} design={d} />
-            ))}
-          </div>
-        )}
-      </section>
+        </section>
+      ) : (
+        TYPES.map((type) => (
+          <VideoTypeSection key={type} type={type} designs={designs.filter((d) => d.videoType === type)} />
+        ))
+      )}
 
       <FinalCTA />
     </>

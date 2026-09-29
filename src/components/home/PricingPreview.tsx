@@ -1,68 +1,62 @@
 import Link from "next/link";
-import { mainCategories } from "@/data/site";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
+import { PriceTag } from "@/components/ui/PriceTag";
 import { Reveal } from "@/components/ui/Reveal";
-import { generalEnquiryMessage } from "@/lib/whatsapp";
+import { startingPrices } from "@/data/pricing";
+import type { CategorySlug } from "@/data/site";
 
-const startingPrices: Record<string, number> = {
-  "invitation-videos": 999,
-  "invitation-websites": 1499,
-  "person-return-videos": 799,
-};
+const plans: { slug: CategorySlug; title: string; tagline: string; includes: string[]; featured?: boolean }[] = [
+  {
+    slug: "invitation-videos",
+    title: "Invitation Videos",
+    tagline: "Wedding invitation videos & 3D shorts",
+    includes: ["Full customisation", "HD video for WhatsApp", "2 free revisions", "Delivery in 48–72 hours"],
+    featured: true,
+  },
+  {
+    slug: "invitation-websites",
+    title: "Invitation Websites",
+    tagline: "Your own shareable invitation website",
+    includes: ["RSVP & live countdown", "Venue map & gallery", "Mobile-first design", "Personal shareable link"],
+  },
+  {
+    slug: "person-return-videos",
+    title: "RIP Tribute Videos",
+    tagline: "Memorial & AI person-return tributes",
+    includes: ["Photos, memories & prayer", "AI person-return option", "Handled with care", "Private preview first"],
+  },
+];
 
 export function PricingPreview() {
   return (
-    <section className="pricing-section bg-onyx py-20 md:py-28 border-y border-gold/20">
+    <section className="pricing-section py-20 md:py-28">
       <div className="container-x">
         <SectionHeading
           eyebrow="Packages & Pricing"
-          title="Transparent starting prices"
-          subtitle="Every package is fully customised — final quotation confirmed on WhatsApp based on your specific requirements."
+          title="Special offer prices"
+          subtitle="Limited-period discounts on every package. Final quotation is confirmed on WhatsApp based on your requirements."
         />
         <div className="grid md:grid-cols-3 gap-6">
-          {mainCategories.map((c, i) => (
-            <Reveal key={c.slug} delay={i * 120} as="article" className="h-full">
-            <div className="relative rounded-2xl gold-border p-8 flex flex-col h-full">
-              <div className="text-4xl mb-4">{c.icon}</div>
-              <h3 className="font-display text-2xl text-ivory mb-2">{c.title}</h3>
-              <p className="text-sm text-ivory/60 mb-6">{c.short}</p>
-              <div className="mb-6">
-                <div className="text-[10px] uppercase tracking-widest text-ivory/50">Starting from</div>
-                <div className="font-display text-4xl gold-text">
-                  ₹{startingPrices[c.slug].toLocaleString("en-IN")}
+          {plans.map((p, i) => (
+            <Reveal key={p.slug} delay={i * 120} as="article" className="h-full">
+              <div className={`plan-card ${p.featured ? "plan-card--featured" : ""}`}>
+                {p.featured && <span className="plan-card-ribbon">Most popular</span>}
+                <h3>{p.title}</h3>
+                <p className="plan-card-tagline">{p.tagline}</p>
+                <PriceTag price={startingPrices[p.slug]} label="Starting from" size="lg" />
+                <ul className="plan-card-list">
+                  {p.includes.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+                <div className="plan-card-actions">
+                  <Link href={`/${p.slug}`} className="plan-card-browse">View designs</Link>
+                  <WhatsAppButton size="md" message={`Hi STR Invitations, I'd like a quote for ${p.title}.`}>
+                    Get quote
+                  </WhatsAppButton>
                 </div>
               </div>
-              <ul className="space-y-2 text-sm text-ivory/70 mb-8 flex-1">
-                <li>✓ Full customisation</li>
-                <li>✓ HD delivery</li>
-                <li>✓ Fast turnaround</li>
-                <li>✓ WhatsApp support</li>
-              </ul>
-              <div className="flex gap-2">
-                <Link
-                  href={`/${c.slug}`}
-                  className="flex-1 text-center rounded-full border border-gold/50 text-gold px-4 py-2.5 text-sm hover:bg-gold hover:text-obsidian transition-colors"
-                >
-                  Browse
-                </Link>
-                <WhatsAppButton
-                  size="md"
-                  variant="green"
-                  message={`Hi STR Invitations, I would like a quote for ${c.title}.`}
-                >
-                  Quote
-                </WhatsAppButton>
-              </div>
-            </div>
             </Reveal>
           ))}
-        </div>
-
-        <div className="mt-12 text-center">
-          <WhatsAppButton size="lg" variant="gold" message={generalEnquiryMessage()}>
-            Get a Custom Quote
-          </WhatsAppButton>
         </div>
       </div>
     </section>

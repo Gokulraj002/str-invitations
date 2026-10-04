@@ -33,8 +33,8 @@ export function DesignDetail({ designId }: Props) {
   return (
     <>
       {/* Breadcrumbs */}
-      <div className="border-b border-gold/10 bg-obsidian">
-        <div className="container-x py-4 text-xs text-ivory/50 flex items-center gap-2 overflow-x-auto">
+      <div className="detail-breadcrumb">
+        <div className="container-x py-4 text-xs text-ivory/50 flex flex-wrap items-center gap-x-2 gap-y-1">
           <Link href="/" className="hover:text-gold whitespace-nowrap">Home</Link>
           <span>/</span>
           <Link href={`/${cat.slug}`} className="hover:text-gold whitespace-nowrap">{cat.title}</Link>
@@ -56,7 +56,7 @@ export function DesignDetail({ designId }: Props) {
 
         <aside className="lg:col-span-2">
           <div className="text-xs uppercase tracking-[0.35em] text-gold mb-3">{type.title}</div>
-          <h1 className="font-display text-3xl md:text-4xl text-ivory leading-tight">
+          <h1 className="detail-title">
             {design.title}
           </h1>
           <div className="mt-3 text-sm text-gold/80">Design ID: {design.id}{design.duration ? ` · ${design.duration} min` : ""}</div>
@@ -70,7 +70,7 @@ export function DesignDetail({ designId }: Props) {
               {design.tags.map((t) => (
                 <span
                   key={t}
-                  className="text-[10px] uppercase tracking-wider px-3 py-1 rounded-full bg-white/5 text-ivory/70 border border-white/10"
+                  className="design-tag text-[10px] uppercase tracking-wider px-3 py-1 rounded-full"
                 >
                   {t}
                 </span>
@@ -85,7 +85,7 @@ export function DesignDetail({ designId }: Props) {
 
           {design.features && (
             <div className="mt-8">
-              <h3 className="font-display text-lg text-ivory mb-3">Included</h3>
+              <h2 className="detail-subtitle">Included</h2>
               <ul className="space-y-2 text-sm text-ivory/70">
                 {design.features.map((f) => (
                   <li key={f} className="flex items-start gap-2">
@@ -105,7 +105,7 @@ export function DesignDetail({ designId }: Props) {
               href={`https://youtube.com/watch?v=${design.youtubeId}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-gold/40 text-gold px-6 py-3.5 hover:bg-gold hover:text-obsidian transition-colors"
+              className="btn-outline"
             >
               Watch on YouTube
             </a>
@@ -114,7 +114,7 @@ export function DesignDetail({ designId }: Props) {
       </section>
 
       {related.length > 0 && (
-        <section className="bg-onyx py-16 md:py-20 border-t border-gold/10">
+        <section className="section-tint py-16 md:py-20">
           <div className="container-x">
             <SectionHeading eyebrow="You may also like" title="Related designs" />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -1,42 +1,28 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { motion, type Transition } from "framer-motion";
 
 type Props = {
   children: React.ReactNode;
-  delay?: number;
+  delay?: number; // ms
   className?: string;
-  as?: "div" | "section" | "article";
+  as?: "div" | "section" | "article" | "li";
 };
 
-// Elegant scroll-reveal wrapper. Fades + rises into view once, then stays.
-export function Reveal({ children, delay = 0, className = "", as: Tag = "div" }: Props) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const [shown, setShown] = useState(false);
+const tags = { div: motion.div, section: motion.section, article: motion.article, li: motion.li };
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShown(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -60px 0px" }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
+// One spring for the whole site so every entrance feels like the same material.
+export const softSpring: Transition = { type: "spring", stiffness: 70, damping: 14 };
 
+export function Reveal({ children, delay = 0, className = "", as = "div" }: Props) {
+  const Tag = tags[as];
   return (
     <Tag
-      ref={ref as never}
-      style={{ transitionDelay: shown ? `${delay}ms` : "0ms" }}
-      className={`transition-all duration-[900ms] ease-out ${
-        shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-      } ${className}`}
+      className={className}
+      initial={{ opacity: 0, y: 36 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ ...softSpring, delay: delay / 1000 }}
     >
       {children}
     </Tag>

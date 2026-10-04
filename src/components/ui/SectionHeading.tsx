@@ -8,22 +8,16 @@ type Props = {
 export function SectionHeading({ eyebrow, title, subtitle, align = "center" }: Props) {
   const isCenter = align === "center";
   return (
-    <div className={`mb-14 md:mb-20 ${isCenter ? "text-center max-w-3xl mx-auto" : ""}`}>
+    <div className={`section-heading ${isCenter ? "section-heading--center" : ""}`}>
       {eyebrow && (
-        <div className={`eyebrow mb-5 flex items-center gap-3 ${isCenter ? "justify-center" : ""}`}>
-          <span className="w-8 h-px bg-gold/60" />
+        <p className="eyebrow section-heading-eyebrow">
+          <span aria-hidden />
           {eyebrow}
-          {isCenter && <span className="w-8 h-px bg-gold/60" />}
-        </div>
-      )}
-      <h2 className="text-3xl md:text-5xl text-ivory">
-        {title}
-      </h2>
-      {subtitle && (
-        <p className={`mt-5 text-base md:text-lg text-ivory/60 leading-relaxed font-light ${isCenter ? "max-w-2xl mx-auto" : "max-w-2xl"}`}>
-          {subtitle}
+          {isCenter && <span aria-hidden />}
         </p>
       )}
+      <h2>{title}</h2>
+      {subtitle && <p className="section-heading-sub">{subtitle}</p>}
     </div>
   );
 }

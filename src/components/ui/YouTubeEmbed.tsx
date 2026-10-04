@@ -36,7 +36,7 @@ export function YouTubeEmbed({ videoId, title = "Video", className = "" }: Props
           <VideoThumb videoId={videoId} alt={title} priority sizes="(min-width: 1024px) 50vw, 100vw" />
           <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300" />
           <span className="absolute inset-0 grid place-items-center">
-            <span className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gold text-obsidian grid place-items-center shadow-gold scale-90 group-hover:scale-100 transition-transform duration-500">
+            <span className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-[#6d0719] text-[#fff8ed] grid place-items-center shadow-gold scale-90 group-hover:scale-100 transition-transform duration-500">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M8 5v14l11-7z" />
               </svg>

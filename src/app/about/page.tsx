@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Feather, Landmark, HandHeart } from "lucide-react";
 import { PageHero } from "@/components/ui/PageHero";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { site } from "@/data/site";
@@ -7,24 +8,24 @@ import { designs } from "@/data/designs";
 import { generalEnquiryMessage } from "@/lib/whatsapp";
 
 export const metadata = {
-  title: "About STR Invitations",
+  title: "About Us",
   description:
     "STR Invitations — a boutique digital invitation studio for wedding video invitations, invitation websites and heartfelt RIP tribute videos.",
 };
 
 const values = [
   {
-    icon: "❋",
+    icon: <Feather size={30} strokeWidth={1.5} />,
     title: "Craft",
     text: "Every frame, every animation, every word — considered and hand-refined for your family.",
   },
   {
-    icon: "❦",
+    icon: <Landmark size={30} strokeWidth={1.5} />,
     title: "Culture",
     text: "Deeply rooted in Indian traditions while embracing modern cinematic storytelling.",
   },
   {
-    icon: "❥",
+    icon: <HandHeart size={30} strokeWidth={1.5} />,
     title: "Care",
     text: "Direct WhatsApp support — you always know exactly who is working on your invitation.",
   },
@@ -69,7 +70,7 @@ export default function AboutPage() {
       <section className="about-story">
         <div className="about-story-inner">
           <div className="about-logo-frame">
-            <Image src="/logo-str.PNG" alt="STR Invitations logo" width={260} height={260} className="about-logo" unoptimized priority />
+            <Image src="/logo-str.PNG" alt="STR Invitations logo" width={260} height={229} className="about-logo" priority sizes="(max-width: 900px) 186px, 236px" />
           </div>
           <div className="about-copy">
             <p className="eyebrow">A boutique studio</p>

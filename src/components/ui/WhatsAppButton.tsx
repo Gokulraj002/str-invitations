@@ -18,9 +18,9 @@ export function WhatsAppButton({
 }: Props) {
   const base = "inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all";
   const variants = {
-    gold: "bg-gradient-to-b from-gold to-gold-dark text-obsidian hover:shadow-gold",
-    outline: "border border-gold/60 text-gold hover:bg-gold hover:text-obsidian",
-    green: "bg-[#25D366] text-white hover:bg-[#1DA851] shadow-card",
+    gold: "bg-[#6d0719] text-[#fff8ed] hover:bg-[#86142a]",
+    outline: "border border-[#b57b36] text-[#6d0719] hover:bg-[#6d0719] hover:text-white",
+    green: "wa-green",
   }[variant];
   const sizes = {
     sm: "px-3.5 py-2 text-xs",

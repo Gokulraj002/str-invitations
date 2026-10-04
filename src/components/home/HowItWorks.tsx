@@ -11,7 +11,7 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className="process-section container-x py-20 md:py-28">
+    <section className="process-section container-x py-20 md:py-24">
       <Reveal>
         <SectionHeading
           eyebrow="How It Works"
@@ -19,20 +19,15 @@ export function HowItWorks() {
           subtitle="A transparent 5-step process — from picking a design to sharing your final invitation on WhatsApp."
         />
       </Reveal>
-      <div className="grid md:grid-cols-5 gap-4">
+      <ol className="steps">
         {steps.map((s, i) => (
-          <Reveal key={s.n} delay={i * 100}>
-            <div className="relative p-6 rounded-2xl gold-border h-full">
-              <div className="font-display text-5xl gold-text mb-3 leading-none">{s.n}</div>
-              <h4 className="font-display text-lg text-ivory mb-1.5">{s.t}</h4>
-              <p className="text-sm text-ivory/60 leading-relaxed">{s.d}</p>
-              {i < steps.length - 1 && (
-                <span className="hidden md:block absolute top-1/2 -right-3 w-6 h-px bg-gold/30" />
-              )}
-            </div>
+          <Reveal as="li" key={s.n} delay={i * 90} className="soft-card step-card">
+            <span className="step-num">STEP {s.n}</span>
+            <h3>{s.t}</h3>
+            <p>{s.d}</p>
           </Reveal>
         ))}
-      </div>
+      </ol>
     </section>
   );
 }

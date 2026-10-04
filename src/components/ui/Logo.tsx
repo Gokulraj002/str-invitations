@@ -11,9 +11,10 @@ export function Logo({ size = 44, className = "", withText = true }: Props) {
       >
         <Image
           src="/logo-str.PNG"
-          alt="STR Invitations"
+          alt=""
           width={size - 6}
-          height={size - 6}
+          height={Math.round(((size - 6) * 706) / 800)}
+          loading="eager"
           className="object-contain"
         />
       </span>

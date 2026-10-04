@@ -11,7 +11,12 @@ const videoMenu = [
   { href: "/invitation-videos#long", label: "Wedding Invitation Videos" },
   { href: "/invitation-videos#3d-short", label: "3D Short Videos" },
 ];
-const websiteMenu = [{ href: "/invitation-websites", label: "Website Demos" }];
+const websiteMenu = [
+  { href: "/invitation-websites/wedding", label: "Wedding Websites" },
+  { href: "/invitation-websites/engagement", label: "Engagement Websites" },
+  { href: "/invitation-websites/save-the-date", label: "Save the Date" },
+  { href: "/invitation-websites/baby-shower", label: "Baby Shower" },
+];
 
 const links = [
   { href: "/", label: "Home" },
@@ -32,7 +37,7 @@ export function Navbar() {
   const active = (href: string) => href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return <header className="reference-nav"><div className="reference-nav-inner">
-    <Link href="/" aria-label="STR Invitations home"><Logo size={72} /></Link>
+    <Link href="/" aria-label="STR Invitations home"><Logo size={58} /></Link>
     <nav className={open ? "nav-links open" : "nav-links"} aria-label="Main navigation">
       <div className="mobile-menu-heading"><span>Explore STR Invitations</span><small>Beautifully made for every celebration</small></div>
       <Link className={active("/") ? "active" : ""} href="/">Home</Link>

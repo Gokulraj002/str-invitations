@@ -7,13 +7,14 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
 import { IntroSplash, introScript } from "@/components/ui/IntroSplash";
+import { MotionProvider } from "@/components/ui/MotionProvider";
 import { site } from "@/data/site";
 
 // Fallback font — used until the licensed PolySans files are added to /public/fonts.
 const manrope = Manrope({
   variable: "--font-sans-src",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -33,7 +34,6 @@ export const metadata: Metadata = {
     siteName: site.name,
     type: "website",
   },
-  icons: { icon: "/favicon.ico" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -45,9 +45,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="min-h-full flex flex-col">
         <IntroSplash />
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <MotionProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </MotionProvider>
         <WhatsAppFab />
       </body>
     </html>

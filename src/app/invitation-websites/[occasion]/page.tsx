@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { PageHero } from "@/components/ui/PageHero";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { WebsiteCard } from "@/components/ui/WebsiteCard";
+import { Reveal } from "@/components/ui/Reveal";
 import { FinalCTA } from "@/components/home/FinalCTA";
 import { websites } from "@/data/websites";
 import { occasions } from "@/data/site";
@@ -32,14 +33,18 @@ export default async function OccasionWebsitePage({ params }: { params: Promise<
         eyebrow="Invitation Websites"
         title={`${o.title} Invitation Websites`}
         accentWord={o.title}
-        subtitle={`Elegant, mobile-first ${o.title.toLowerCase()} invitation websites — tap any design to preview it live.`}
+        subtitle={`Tap any ${o.title.toLowerCase()} design to try the live website, exactly as your guests will see it.`}
       />
       <section className="container-x py-16">
         {list.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {list.map((s) => <WebsiteCard key={s.id} site={s} />)}
+          <div className="site-grid">
+            {list.map((s, i) => (
+              <Reveal key={s.slug} delay={(i % 4) * 80}>
+                <WebsiteCard site={s} />
+              </Reveal>
+            ))}
           </div>
         )}
       </section>

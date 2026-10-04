@@ -67,6 +67,7 @@ price: { original: 2000, price: 899 },
 | `"3d-short"` | Every 3D short video |
 | `rip` | Every RIP tribute video |
 | `startingPrices` | "Starting from" prices on the category cards and pricing page |
+| `websitePrices` | Invitation website price for each type (match the Vercel catalogue) |
 
 Change a number once here and it updates everywhere on the site.
 
@@ -106,33 +107,31 @@ Change a number once here and it updates everywhere on the site.
 
 ---
 
-## 6. Add invitation website demos
+## 6. Invitation website demos
 
-Open `src/data/websites.ts` and add entries inside the `[ ]`:
+All website demos live on your catalogue, **https://str-inivitations.vercel.app**. The STR site shows a card for each design in `src/data/websites.ts`. Clicking a card opens that design's page on the catalogue (`/invitations/<slug>`).
+
+**Add a demo:** first add the design to the Vercel catalogue, then copy an entry in `websites.ts` and change it:
 
 ```ts
-export const websites: InvitationWebsite[] = [
-  {
-    id: "WEB-001",
-    title: "Royal Telugu Wedding Website",
-    occasion: "wedding",
-    url: "https://your-demo-link.com",
-    features: ["RSVP", "Countdown", "Venue map", "Photo gallery"],
-  },
-  {
-    id: "WEB-002",
-    title: "Minimal Engagement Website",
-    occasion: "engagement",
-    url: "https://another-demo-link.com",
-  },
-];
+{
+  "slug": "ravi-priya",                     // must match the catalogue page /invitations/ravi-priya
+  "title": "Ravi & Priya",
+  "occasion": "wedding",                    // "wedding", "engagement", "save-the-date" or "baby-shower"
+  "style": "Royal Gold",                    // short design name shown on the card
+  "colours": "Regal Gold & Cream",
+  "description": "Luxury royal wedding invitation with music, countdown and gallery.",
+  "url": "https://str-inivitations.vercel.app/invitations/ravi-priya",
+  "image": "/websites/ravi-priya.webp",     // preview picture (see below)
+  "features": ["RSVP form", "Google Maps", "Music player", "Countdown", "Photo gallery"]
+},
 ```
 
-A preview screenshot is generated automatically from the link. To use your own screenshot, put the image in `public/websites/` and add `image: "/websites/my-picture.webp",` to the entry.
+**Preview picture:** upload a portrait screenshot (about 430×860) to `public/websites/` with the same name as the slug. If you leave out the `"image"` line, a screenshot is generated automatically.
 
-Visitors click **"View live demo ↗"** to open the website in a new tab.
+**Prices:** website prices are set per type in `src/data/pricing.ts` under `websitePrices` (wedding, engagement, save-the-date, baby-shower). **Keep them the same as on the Vercel catalogue**, so customers see one price everywhere. To give a single design its own price, add `"price": { "original": 5999, "price": 2499 },` to that entry.
 
----
+**Remove a demo:** delete its `{ … },` block.
 
 ## 7. Update images
 
@@ -141,6 +140,8 @@ Visitors click **"View live demo ↗"** to open the website in a new tab.
   - Home banner (desktop): `public/str-home-banner-v3.webp`
   - Home banner (mobile): `public/str-home-banner-mobile-v1.webp`
   - Page header background: `public/str-ceremony-hero-v2.webp`
+  - Browser tab icon: `src/app/icon.png` (512×512) · iPhone home-screen icon: `src/app/apple-icon.png` (180×180)
+  - Link preview image (WhatsApp / Facebook shares): `src/app/opengraph-image.png` (1200×630)
 - On GitHub: open the `public` folder → **Add file → Upload files**.
 - Use `.webp` or `.jpg` under 500 KB so pages load quickly.
 

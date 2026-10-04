@@ -49,10 +49,10 @@ export default function FAQPage() {
           {faqs.map((f, i) => (
             <details
               key={i}
-              className="group rounded-2xl gold-border p-6 open:shadow-elegant transition-all"
+              className="group soft-card faq-item"
             >
               <summary className="flex items-start justify-between gap-4 cursor-pointer list-none">
-                <h3 className="font-display text-lg md:text-xl text-ivory pr-4">{f.q}</h3>
+                <h2 className="faq-q">{f.q}</h2>
                 <span className="text-gold text-2xl leading-none flex-shrink-0 group-open:rotate-45 transition-transform">
                   +
                 </span>

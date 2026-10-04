@@ -1,4 +1,4 @@
-import type { CategorySlug } from "./site";
+import type { CategorySlug, OccasionSlug } from "./site";
 
 // ─────────────────────────────────────────────────────────────
 // ALL PRICES ON THE WEBSITE COME FROM THIS FILE.
@@ -43,8 +43,16 @@ export const videoTypes: Record<
 // "Starting from" prices shown on category cards and the pricing section.
 export const startingPrices: Record<CategorySlug, Price> = {
   "invitation-videos": { original: 2000, price: 899 },
-  "invitation-websites": { original: 2999, price: 1499 },
+  "invitation-websites": { original: 5999, price: 1999 },
   "person-return-videos": { original: 10000, price: 5000 },
+};
+
+// Invitation website prices by type — kept identical to str-inivitations.vercel.app.
+export const websitePrices: Partial<Record<OccasionSlug, Price>> = {
+  wedding: { original: 5999, price: 2999 },
+  engagement: { original: 5999, price: 2499 },
+  "save-the-date": { original: 5999, price: 1999 },
+  "baby-shower": { original: 5999, price: 1999 },
 };
 
 export const discountPercent = ({ original, price }: Price) =>

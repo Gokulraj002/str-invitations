@@ -1,3 +1,4 @@
+import { Star } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 
@@ -27,38 +28,30 @@ const reviews = [
 
 export function Testimonials() {
   return (
-    <section className="container-x py-20 md:py-28">
+    <section className="container-x py-20 md:py-24">
       <Reveal>
         <SectionHeading
           eyebrow="Kind Words"
           title="What our customers say"
-          subtitle="Real feedback from families we've had the honour of designing invitations for."
+          subtitle="Feedback from families we've had the honour of designing invitations for."
         />
       </Reveal>
       <div className="grid md:grid-cols-3 gap-6">
         {reviews.map((r, i) => (
-          <Reveal key={r.name} delay={i * 120}>
-            <figure className="relative rounded-2xl gold-border p-8 h-full flex flex-col">
-              <div className="flex items-center gap-1 mb-4">
+          <Reveal key={r.name} delay={i * 110} className="h-full">
+            <figure className="soft-card review-card">
+              <div className="review-stars" aria-label="5 out of 5 stars">
                 {Array.from({ length: 5 }).map((_, k) => (
-                  <svg key={k} width="16" height="16" viewBox="0 0 24 24" fill="#D4AF37">
-                    <path d="M12 2l3 6.5 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" />
-                  </svg>
+                  <Star key={k} size={16} fill="currentColor" strokeWidth={0} aria-hidden />
                 ))}
               </div>
-              <blockquote className="text-ivory/80 leading-relaxed text-[15px] flex-1">
-                &ldquo;{r.text}&rdquo;
-              </blockquote>
-              <figcaption className="mt-6 pt-6 border-t border-white/5 flex items-center gap-4">
-                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-gold to-gold-dark grid place-items-center text-obsidian font-display font-semibold shrink-0">
-                  {r.initials}
-                </div>
-                <div>
-                  <div className="font-display text-lg text-ivory leading-tight">{r.name}</div>
-                  <div className="text-xs text-gold/80 uppercase tracking-widest">
-                    {r.occasion} · {r.location}
-                  </div>
-                </div>
+              <blockquote>&ldquo;{r.text}&rdquo;</blockquote>
+              <figcaption>
+                <span className="review-avatar" aria-hidden>{r.initials}</span>
+                <span>
+                  <strong>{r.name}</strong>
+                  <small>{r.occasion} · {r.location}</small>
+                </span>
               </figcaption>
             </figure>
           </Reveal>

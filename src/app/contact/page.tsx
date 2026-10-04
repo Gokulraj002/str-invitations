@@ -2,11 +2,12 @@ import Link from "next/link";
 import { PageHero } from "@/components/ui/PageHero";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
+import { Phone, Mail, CirclePlay } from "lucide-react";
 import { generalEnquiryMessage } from "@/lib/whatsapp";
 import { site } from "@/data/site";
 
 export const metadata = {
-  title: "Contact STR Invitations",
+  title: "Contact Us",
   description:
     "Talk to STR Invitations — WhatsApp us on +91 63626 17878, call, email or visit our YouTube channel.",
 };
@@ -24,7 +25,7 @@ const channels = [
   },
   {
     tone: "rose",
-    icon: "☎",
+    icon: <Phone size={32} strokeWidth={1.5} />,
     label: "Phone Call",
     value: site.phoneDisplay,
     subtitle: "10 AM – 8 PM · every day",
@@ -34,7 +35,7 @@ const channels = [
   },
   {
     tone: "mint",
-    icon: "✉",
+    icon: <Mail size={32} strokeWidth={1.5} />,
     label: "Email",
     value: site.email,
     subtitle: "For briefs, quotes and larger orders",
@@ -44,7 +45,7 @@ const channels = [
   },
   {
     tone: "blue",
-    icon: "▶",
+    icon: <CirclePlay size={32} strokeWidth={1.5} />,
     label: "YouTube",
     value: "@strinvitations",
     subtitle: "Watch our full portfolio",

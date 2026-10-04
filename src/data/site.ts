@@ -31,6 +31,8 @@ export const mainCategories = [
 export const occasions = [
   { slug: "wedding", title: "Wedding" },
   { slug: "engagement", title: "Engagement" },
+  { slug: "save-the-date", title: "Save the Date" },
+  { slug: "baby-shower", title: "Baby Shower" },
   { slug: "house-warming", title: "House Warming" },
   { slug: "dhothi-ceremony", title: "Dhothi Ceremony" },
   { slug: "naming-ceremony", title: "Naming Ceremony" },
